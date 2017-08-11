@@ -34,6 +34,11 @@ trait AdminPermission
         return $this->belongsToMany($relatedModel, $pivotTable, 'user_id', 'role_id');
     }
 
+    public function areas()
+    {
+        return $this->belongsToMany('App\Admin\Model\Area', 'admin_user_areas', 'user_id', 'area_id');
+    }
+
     /**
      * A User has and belongs to many permissions.
      *

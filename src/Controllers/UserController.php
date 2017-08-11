@@ -10,6 +10,7 @@ use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Layout\Content;
 use Illuminate\Routing\Controller;
+use App\Admin\Model\Area;
 
 class UserController extends Controller
 {
@@ -113,6 +114,7 @@ class UserController extends Controller
 
             $form->multipleSelect('roles', trans('admin::lang.roles'))->options(Role::all()->pluck('name', 'id'));
             $form->multipleSelect('permissions', trans('admin::lang.permissions'))->options(Permission::all()->pluck('name', 'id'));
+            $form->multipleSelect('areas', '选择区域')->options(Area::all()->pluck('area_name', 'id'));
 
             $form->display('created_at', trans('admin::lang.created_at'));
             $form->display('updated_at', trans('admin::lang.updated_at'));
