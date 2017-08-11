@@ -20,11 +20,12 @@ class Map extends Field
      */
     public static function getAssets()
     {
-        if (config('app.locale') == 'zh_CN') {
-            $js = 'http://map.qq.com/api/js?v=2.exp';
-        } else {
-            $js = 'https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&key='.env('GOOGLE_API_KEY');
-        }
+//        if (config('app.locale') == 'zh_CN') {
+        $key = config('admin.map.js_key','5uyeufy1lORsr9SOVHyzsyniXuOYwedi');
+        $js = 'http://api.map.baidu.com/api?v=2.0&ak='.$key;
+//        } else {
+//            $js = 'https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&key='.env('GOOGLE_API_KEY');
+//        }
 
         return compact('js');
     }
@@ -43,11 +44,11 @@ class Map extends Field
          * Google map is blocked in mainland China
          * people in China can use Tencent map instead(;
          */
-        if (config('app.locale') == 'zh_CN') {
-            $this->useTencentMap();
-        } else {
-            $this->useGoogleMap();
-        }
+//        if (config('app.locale') == 'zh_CN') {
+        $this->useTencentMap();
+//        } else {
+//            $this->useGoogleMap();
+//        }
     }
 
     public function useGoogleMap()
@@ -132,6 +133,30 @@ EOT;
         }
 
         initTencentMap('{$this->id['lat']}{$this->id['lng']}');
+EOT;
+    }
+
+    public function useBaiduMap()
+    {
+        $this->script = <<<EOT
+        function initBaiduMap(name) {
+            var lat = $('#{$this->id['lat']}');
+            var lng = $('#{$this->id['lng']}');
+               
+            setTimeout(function(){
+                var point = new BMap.Point(lng.val(), lat.val());
+                var container = document.getElementById("map_"+name);
+                var map = new BMap.Map(container);
+                map.centerAndZoom(point, 15);
+                var opts = {type: BMAP_NAVIGATION_CONTROL_SMALL}    
+                map.addControl(new BMap.NavigationControl(opts));
+                
+                var marker = new BMap.Marker(point);        // 创建标注    
+                map.addOverlay(marker);           
+            },0);
+        }
+
+        initBaiduMap('{$this->id['lat']}{$this->id['lng']}');
 EOT;
     }
 }
